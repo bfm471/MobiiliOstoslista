@@ -1,12 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
   const [item, setItem] = useState('');
   const [items, setItems] = useState([]);
-
-  console.log(item, items)
+  const inputFocus = useRef(null);
 
   const handleAdd = () => {
     if (item) {
@@ -14,6 +13,15 @@ export default function App() {
       setItem('');
     }
   }
+
+  const handleClear = () => {
+    setItems([]);
+    setItem('');
+  }
+
+  useEffect(() => {
+    inputFocus.current.focus();
+  })
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,10 +31,11 @@ export default function App() {
           placeholder='Enter item'
           onChangeText={text => setItem(text)}
           value={item}
+          ref={inputFocus}
         />
         <View style={styles.buttonContainer}>
           <Button title='ADD' onPress={handleAdd} />
-          <Button title='CLEAR' onPress={() => setItems([])}/>
+          <Button title='CLEAR' onPress={handleClear}/>
         </View>
       </View>
       <View style={styles.listContainer}>
